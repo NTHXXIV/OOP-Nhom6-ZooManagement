@@ -12,13 +12,18 @@ public class FeedingSchedule {
     private List<LocalTime> feedingTimes;
 
     public FeedingSchedule(String foodType, int timesPerDay, List<LocalTime> feedingTimes) {
-        this.foodType = foodType;
+        setFoodType(foodType);
         setTimesPerDay(timesPerDay);
         this.feedingTimes = feedingTimes != null ? feedingTimes : new ArrayList<>();
     }
 
     public String getFoodType() { return foodType; }
-    public void setFoodType(String foodType) { this.foodType = foodType; }
+    public void setFoodType(String foodType) {
+        if (foodType == null || foodType.isBlank()) {
+            throw new ValidationException("Loại thức ăn không được để trống");
+        }
+        this.foodType = foodType;
+    }
     public int getTimesPerDay() { return timesPerDay; }
     public void setTimesPerDay(int timesPerDay) {
         if (timesPerDay <= 0) {
