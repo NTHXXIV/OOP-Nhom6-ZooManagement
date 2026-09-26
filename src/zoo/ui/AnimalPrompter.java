@@ -61,12 +61,14 @@ public class AnimalPrompter {
     }
 
     public void searchAnimals(Scanner sc) {
-        console.showMessage("Tìm theo: 1) tên  2) loài  3) tình trạng sức khỏe");
+        console.showMessage("Tìm theo: 1) mã động vật  2) tên  3) loài  4) khu vực sống  5) tình trạng sức khỏe");
         int mode = console.readChoice(sc);
         List<Animal> results = switch (mode) {
-            case 1 -> service.searchByName(console.promptText(sc, "Tên chứa"));
-            case 2 -> service.searchBySpecies(console.promptText(sc, "Loài chứa"));
-            case 3 -> service.searchByHealthStatus(promptHealthStatus(sc));
+            case 1 -> service.searchById(console.promptText(sc, "Mã chứa"));
+            case 2 -> service.searchByName(console.promptText(sc, "Tên chứa"));
+            case 3 -> service.searchBySpecies(console.promptText(sc, "Loài chứa"));
+            case 4 -> service.searchByHabitat(console.promptText(sc, "Khu vực sống chứa"));
+            case 5 -> service.searchByHealthStatus(promptHealthStatus(sc));
             default -> List.of();
         };
         displayList(results);
