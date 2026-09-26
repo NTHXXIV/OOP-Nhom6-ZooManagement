@@ -10,16 +10,26 @@ public class Habitat {
 
     public Habitat(String habitatId, String name, String type, int capacity) {
         this.habitatId = habitatId;
-        this.name = name;
-        this.type = type;
+        setName(name);
+        setType(type);
         setCapacity(capacity);
     }
 
     public String getHabitatId() { return habitatId; }
     public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
+    public void setName(String name) {
+        if (name == null || name.isBlank()) {
+            throw new ValidationException("Tên khu vực sống không được để trống");
+        }
+        this.name = name;
+    }
     public String getType() { return type; }
-    public void setType(String type) { this.type = type; }
+    public void setType(String type) {
+        if (type == null || type.isBlank()) {
+            throw new ValidationException("Loại khu vực sống không được để trống");
+        }
+        this.type = type;
+    }
     public int getCapacity() { return capacity; }
     public void setCapacity(int capacity) {
         if (capacity <= 0) {
