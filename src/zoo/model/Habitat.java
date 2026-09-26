@@ -1,5 +1,7 @@
 package zoo.model;
 
+import zoo.exception.ValidationException;
+
 public class Habitat {
     private final String habitatId;
     private String name;
@@ -10,7 +12,7 @@ public class Habitat {
         this.habitatId = habitatId;
         this.name = name;
         this.type = type;
-        this.capacity = capacity;
+        setCapacity(capacity);
     }
 
     public String getHabitatId() { return habitatId; }
@@ -19,7 +21,12 @@ public class Habitat {
     public String getType() { return type; }
     public void setType(String type) { this.type = type; }
     public int getCapacity() { return capacity; }
-    public void setCapacity(int capacity) { this.capacity = capacity; }
+    public void setCapacity(int capacity) {
+        if (capacity <= 0) {
+            throw new ValidationException("Sức chứa khu vực sống phải lớn hơn 0");
+        }
+        this.capacity = capacity;
+    }
 
     @Override
     public String toString() {

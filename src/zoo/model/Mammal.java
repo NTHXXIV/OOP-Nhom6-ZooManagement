@@ -1,5 +1,7 @@
 package zoo.model;
 
+import zoo.exception.ValidationException;
+
 import java.time.LocalDate;
 
 public class Mammal extends Animal {
@@ -9,11 +11,16 @@ public class Mammal extends Animal {
                   Habitat habitat, HealthStatus healthStatus, FeedingSchedule feedingSchedule,
                   double furLengthCm) {
         super(id, name, gender, dateOfBirth, habitat, healthStatus, feedingSchedule);
-        this.furLengthCm = furLengthCm;
+        setFurLengthCm(furLengthCm);
     }
 
     public double getFurLengthCm() { return furLengthCm; }
-    public void setFurLengthCm(double furLengthCm) { this.furLengthCm = furLengthCm; }
+    public void setFurLengthCm(double furLengthCm) {
+        if (furLengthCm < 0) {
+            throw new ValidationException("Độ dài lông không được âm");
+        }
+        this.furLengthCm = furLengthCm;
+    }
 
     @Override
     public AnimalType getType() { return AnimalType.MAMMAL; }

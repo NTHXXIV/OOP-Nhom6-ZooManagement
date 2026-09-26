@@ -1,5 +1,7 @@
 package zoo.model;
 
+import zoo.exception.ValidationException;
+
 import java.time.LocalDate;
 
 public class Bird extends Animal {
@@ -9,11 +11,16 @@ public class Bird extends Animal {
                 Habitat habitat, HealthStatus healthStatus, FeedingSchedule feedingSchedule,
                 double wingspanCm) {
         super(id, name, gender, dateOfBirth, habitat, healthStatus, feedingSchedule);
-        this.wingspanCm = wingspanCm;
+        setWingspanCm(wingspanCm);
     }
 
     public double getWingspanCm() { return wingspanCm; }
-    public void setWingspanCm(double wingspanCm) { this.wingspanCm = wingspanCm; }
+    public void setWingspanCm(double wingspanCm) {
+        if (wingspanCm < 0) {
+            throw new ValidationException("Sải cánh không được âm");
+        }
+        this.wingspanCm = wingspanCm;
+    }
 
     @Override
     public AnimalType getType() { return AnimalType.BIRD; }
