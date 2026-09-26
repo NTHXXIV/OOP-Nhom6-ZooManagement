@@ -16,7 +16,7 @@
 - Thêm động vật mới
 - Xóa động vật
 - Sửa thông tin động vật
-- Tìm kiếm động vật (theo tên / loài / tình trạng sức khỏe)
+- Tìm kiếm động vật (theo mã / tên / loài / khu vực sống / tình trạng sức khỏe)
 - Hiển thị danh sách động vật
 - Lưu dữ liệu ra file CSV
 - Tải dữ liệu từ file CSV
@@ -28,7 +28,7 @@ src/zoo/
 ├── model/       # Thực thể domain: Animal (abstract), Mammal, Bird, Reptile, Habitat,
 │                #   FeedingSchedule, Gender, HealthStatus, AnimalType
 ├── repository/  # Lưu trữ trong bộ nhớ: AnimalRepository (interface), InMemoryAnimalRepository
-├── file/        # Đọc/ghi file: AnimalFileHandler (interface), CsvAnimalFileHandler
+├── file/        # Đọc/ghi file: AnimalFileHandler (interface), CsvAnimalFileHandler, LoadResult
 ├── service/     # Nghiệp vụ: ZooService (validate, điều phối repository + file handler)
 ├── ui/          # Console I/O: ConsoleIO (menu chính + I/O tổng quát), AnimalPrompter
 │                #   (toàn bộ use case Animal: add/delete/edit/search/list/save/load),
@@ -52,6 +52,13 @@ src/zoo/
 | Đa hình | Gọi `getDietInfo()`/`getSpecies()` qua tham chiếu `Animal`, thực thi khác nhau tùy subclass thực tế |
 | Đóng gói | Thuộc tính private, truy cập qua getter/setter có validate |
 
+## Validation
+
+- Mã động vật (`Animal.id`) bắt buộc và duy nhất; tên, ngày sinh, tên/loại khu vực sống, loại thức ăn không được để trống.
+- Ngày sinh không được ở tương lai.
+- Độ dài lông (Mammal), sải cánh (Bird) không được âm; sức chứa khu vực sống và số lần cho ăn mỗi ngày phải lớn hơn 0.
+- Vi phạm validation ném `ValidationException`, được bắt ở `ZooApplication` và hiển thị thông báo lỗi, không làm crash chương trình.
+
 ## Định dạng file CSV
 
 Mỗi dòng là 1 động vật, cột `type` (MAMMAL/BIRD/REPTILE) quyết định subclass khi load:
@@ -64,6 +71,8 @@ id,type,name,gender,dob,habitatId,habitatName,habitatType,habitatCapacity,health
 - `extraField`: thuộc tính riêng từng loại — furLengthCm (Mammal) / wingspanCm (Bird) / venomous (Reptile)
 
 File mẫu: [animals_sample.csv](animals_sample.csv) (10+ dòng dữ liệu mẫu).
+
+Khi tải file (`CsvAnimalFileHandler.load` trả về `LoadResult`): dòng nào sai định dạng hoặc trùng mã động vật với dòng trước đó trong cùng file sẽ bị **bỏ qua** (không làm hỏng cả lần tải), và được liệt kê lại kèm số dòng + lý do để người dùng biết.
 
 ## Biên dịch và chạy
 
