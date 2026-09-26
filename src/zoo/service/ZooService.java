@@ -42,6 +42,11 @@ public class ZooService {
                 .orElseThrow(() -> new ValidationException("Không tìm thấy mã động vật: " + id));
     }
 
+    public List<Animal> searchById(String keyword) {
+        String lower = keyword.toLowerCase();
+        return repository.search(a -> a.getId().toLowerCase().contains(lower));
+    }
+
     public List<Animal> searchByName(String keyword) {
         String lower = keyword.toLowerCase();
         return repository.search(a -> a.getName().toLowerCase().contains(lower));
@@ -50,6 +55,11 @@ public class ZooService {
     public List<Animal> searchBySpecies(String species) {
         String lower = species.toLowerCase();
         return repository.search(a -> a.getSpecies().toLowerCase().contains(lower));
+    }
+
+    public List<Animal> searchByHabitat(String keyword) {
+        String lower = keyword.toLowerCase();
+        return repository.search(a -> a.getHabitat() != null && a.getHabitat().getName().toLowerCase().contains(lower));
     }
 
     public List<Animal> searchByHealthStatus(HealthStatus status) {
