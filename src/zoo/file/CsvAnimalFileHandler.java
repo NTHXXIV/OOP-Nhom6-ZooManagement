@@ -17,7 +17,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Stores animal records as CSV. One row per animal, denormalized habitat fields
@@ -45,6 +47,7 @@ public class CsvAnimalFileHandler implements AnimalFileHandler {
     public LoadResult load(String filePath) throws IOException {
         List<Animal> animals = new ArrayList<>();
         List<String> skippedRows = new ArrayList<>();
+        Set<String> seenIds = new HashSet<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             String line = reader.readLine(); // skip header
             int lineNumber = 1;
@@ -52,7 +55,12 @@ public class CsvAnimalFileHandler implements AnimalFileHandler {
                 lineNumber++;
                 if (line.isBlank()) continue;
                 try {
-                    animals.add(fromCsvRow(line));
+                    Animal a = fromCsvRow(line);
+                    if (!seenIds.add(a.getId())) {
+                        skippedRows.add("Dòng " + lineNumber + ": trùng mã động vật " + a.getId());
+                        continue;
+                    }
+                    animals.add(a);
                 } catch (RuntimeException e) {
                     skippedRows.add("Dòng " + lineNumber + ": " + e.getMessage());
                 }
