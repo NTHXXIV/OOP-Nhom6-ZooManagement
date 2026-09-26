@@ -42,16 +42,23 @@ public class CsvAnimalFileHandler implements AnimalFileHandler {
     }
 
     @Override
-    public List<Animal> load(String filePath) throws IOException {
+    public LoadResult load(String filePath) throws IOException {
         List<Animal> animals = new ArrayList<>();
+        List<String> skippedRows = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             String line = reader.readLine(); // skip header
+            int lineNumber = 1;
             while ((line = reader.readLine()) != null) {
+                lineNumber++;
                 if (line.isBlank()) continue;
-                animals.add(fromCsvRow(line));
+                try {
+                    animals.add(fromCsvRow(line));
+                } catch (RuntimeException e) {
+                    skippedRows.add("Dòng " + lineNumber + ": " + e.getMessage());
+                }
             }
         }
-        return animals;
+        return new LoadResult(animals, skippedRows);
     }
 
     private String toCsvRow(Animal a) {
