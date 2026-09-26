@@ -2,6 +2,7 @@ package zoo.service;
 
 import zoo.exception.ValidationException;
 import zoo.file.AnimalFileHandler;
+import zoo.file.LoadResult;
 import zoo.model.Animal;
 import zoo.model.HealthStatus;
 import zoo.repository.AnimalRepository;
@@ -74,8 +75,9 @@ public class ZooService {
         fileHandler.save(repository.getAll(), filePath);
     }
 
-    public void loadFromFile(String filePath) throws IOException {
-        List<Animal> loaded = fileHandler.load(filePath);
-        repository.replaceAll(loaded);
+    public LoadResult loadFromFile(String filePath) throws IOException {
+        LoadResult result = fileHandler.load(filePath);
+        repository.replaceAll(result.animals());
+        return result;
     }
 }

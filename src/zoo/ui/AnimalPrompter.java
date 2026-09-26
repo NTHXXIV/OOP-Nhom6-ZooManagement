@@ -1,6 +1,7 @@
 package zoo.ui;
 
 import zoo.exception.ValidationException;
+import zoo.file.LoadResult;
 import zoo.model.Animal;
 import zoo.model.AnimalType;
 import zoo.model.Bird;
@@ -86,8 +87,11 @@ public class AnimalPrompter {
 
     public void loadFromFile(Scanner sc) throws IOException {
         String path = console.promptText(sc, "Đường dẫn file để tải (vd: animals_sample.csv)");
-        service.loadFromFile(path);
-        console.showMessage("Đã tải xong.");
+        LoadResult result = service.loadFromFile(path);
+        console.showMessage("Đã tải " + result.animals().size() + " động vật.");
+        for (String skipped : result.skippedRows()) {
+            console.showError("Bỏ qua " + skipped);
+        }
     }
 
     private String promptUniqueAnimalId(Scanner sc) {
