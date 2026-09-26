@@ -1,5 +1,7 @@
 package zoo.model;
 
+import zoo.exception.ValidationException;
+
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,14 +13,19 @@ public class FeedingSchedule {
 
     public FeedingSchedule(String foodType, int timesPerDay, List<LocalTime> feedingTimes) {
         this.foodType = foodType;
-        this.timesPerDay = timesPerDay;
+        setTimesPerDay(timesPerDay);
         this.feedingTimes = feedingTimes != null ? feedingTimes : new ArrayList<>();
     }
 
     public String getFoodType() { return foodType; }
     public void setFoodType(String foodType) { this.foodType = foodType; }
     public int getTimesPerDay() { return timesPerDay; }
-    public void setTimesPerDay(int timesPerDay) { this.timesPerDay = timesPerDay; }
+    public void setTimesPerDay(int timesPerDay) {
+        if (timesPerDay <= 0) {
+            throw new ValidationException("Số lần cho ăn mỗi ngày phải lớn hơn 0");
+        }
+        this.timesPerDay = timesPerDay;
+    }
     public List<LocalTime> getFeedingTimes() { return feedingTimes; }
     public void setFeedingTimes(List<LocalTime> feedingTimes) { this.feedingTimes = feedingTimes; }
 
