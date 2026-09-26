@@ -1,0 +1,222 @@
+classDiagram
+    class Animal {
+        <<abstract>>
+        -String id
+        -String name
+        -Gender gender
+        -LocalDate dateOfBirth
+        -Habitat habitat
+        -HealthStatus healthStatus
+        -FeedingSchedule feedingSchedule
+        +getId() String
+        +getName() String
+        +setName(String)
+        +getGender() Gender
+        +setGender(Gender)
+        +getDateOfBirth() LocalDate
+        +setDateOfBirth(LocalDate)
+        +getHabitat() Habitat
+        +setHabitat(Habitat)
+        +getHealthStatus() HealthStatus
+        +setHealthStatus(HealthStatus)
+        +getFeedingSchedule() FeedingSchedule
+        +setFeedingSchedule(FeedingSchedule)
+        +getAgeInYears() int
+        +getType()* AnimalType
+        +getSpecies()* String
+        +getDietInfo()* String
+        +getExtraFieldForCsv()* String
+    }
+
+    class Mammal {
+        -double furLengthCm
+        +getFurLengthCm() double
+        +setFurLengthCm(double)
+        +getType() AnimalType
+        +getSpecies() String
+        +getDietInfo() String
+        +getExtraFieldForCsv() String
+    }
+
+    class Bird {
+        -double wingspanCm
+        +getWingspanCm() double
+        +setWingspanCm(double)
+        +getType() AnimalType
+        +getSpecies() String
+        +getDietInfo() String
+        +getExtraFieldForCsv() String
+    }
+
+    class Reptile {
+        -boolean venomous
+        +isVenomous() boolean
+        +setVenomous(boolean)
+        +getType() AnimalType
+        +getSpecies() String
+        +getDietInfo() String
+        +getExtraFieldForCsv() String
+    }
+
+    class Gender {
+        <<enumeration>>
+        MALE
+        FEMALE
+        UNKNOWN
+    }
+
+    class HealthStatus {
+        <<enumeration>>
+        HEALTHY
+        SICK
+        INJURED
+        UNDER_TREATMENT
+        QUARANTINE
+    }
+
+    class AnimalType {
+        <<enumeration>>
+        MAMMAL
+        BIRD
+        REPTILE
+    }
+
+    class Habitat {
+        -String habitatId
+        -String name
+        -String type
+        -int capacity
+        +getHabitatId() String
+        +getName() String
+        +setName(String)
+        +getType() String
+        +setType(String)
+        +getCapacity() int
+        +setCapacity(int)
+    }
+
+    class FeedingSchedule {
+        -String foodType
+        -int timesPerDay
+        -List~LocalTime~ feedingTimes
+        +getFoodType() String
+        +setFoodType(String)
+        +getTimesPerDay() int
+        +setTimesPerDay(int)
+        +getFeedingTimes() List~LocalTime~
+        +setFeedingTimes(List~LocalTime~)
+        +toCsvField() String
+        +fromCsvFields(String, int, String)$ FeedingSchedule
+    }
+
+    class AnimalRepository {
+        <<interface>>
+        +add(Animal)
+        +remove(String)
+        +update(Animal)
+        +findById(String) Optional~Animal~
+        +search(Predicate~Animal~) List~Animal~
+        +getAll() List~Animal~
+        +replaceAll(List~Animal~)
+        +exists(String) boolean
+    }
+
+    class InMemoryAnimalRepository {
+        -Map~String, Animal~ animals
+    }
+
+    class AnimalFileHandler {
+        <<interface>>
+        +save(List~Animal~, String)
+        +load(String) LoadResult
+    }
+
+    class CsvAnimalFileHandler {
+        -String DELIMITER
+        -String HEADER
+        -toCsvRow(Animal) String
+        -fromCsvRow(String) Animal
+    }
+
+    class LoadResult {
+        +animals List~Animal~
+        +skippedRows List~String~
+    }
+
+    class ZooService {
+        -AnimalRepository repository
+        -AnimalFileHandler fileHandler
+        +addAnimal(Animal)
+        +animalIdExists(String) boolean
+        +deleteAnimal(String)
+        +updateAnimal(Animal)
+        +getAnimal(String) Animal
+        +searchById(String) List~Animal~
+        +searchByName(String) List~Animal~
+        +searchBySpecies(String) List~Animal~
+        +searchByHabitat(String) List~Animal~
+        +searchByHealthStatus(HealthStatus) List~Animal~
+        +getAll() List~Animal~
+        +saveToFile(String)
+        +loadFromFile(String) LoadResult
+    }
+
+    class ConsoleIO {
+        +printMainMenu()
+        +readChoice(Scanner) int
+        +showMessage(String)
+        +showError(String)
+        +promptText(Scanner, String) String
+    }
+
+    class AnimalPrompter {
+        -ConsoleIO console
+        -ZooService service
+        +addAnimal(Scanner)
+        +deleteAnimal(Scanner)
+        +editAnimal(Scanner)
+        +searchAnimals(Scanner)
+        +listAll()
+        +saveToFile(Scanner)
+        +loadFromFile(Scanner)
+        -promptUniqueAnimalId(Scanner) String
+        -promptNewAnimal(Scanner, String) Animal
+        -promptAnimalType(Scanner) AnimalType
+        -promptGender(Scanner) Gender
+        -printHealthStatusOptions()
+        -mapHealthStatusChoice(int) HealthStatus
+        -promptHealthStatus(Scanner) HealthStatus
+        -promptHealthStatusOptional(Scanner, HealthStatus) HealthStatus
+        -displayAnimal(Animal)
+        -displayList(List~Animal~)
+    }
+
+    class ZooApplication {
+        +main(String[])$
+    }
+
+    class ValidationException {
+        +ValidationException(String)
+    }
+
+    Animal <|-- Mammal
+    Animal <|-- Bird
+    Animal <|-- Reptile
+    Animal "1" o-- "1" Habitat : habitat
+    Animal "1" *-- "1" FeedingSchedule : feedingSchedule
+    Animal "1" --> "1" Gender
+    Animal "1" --> "1" HealthStatus
+    AnimalRepository <|.. InMemoryAnimalRepository
+    AnimalFileHandler <|.. CsvAnimalFileHandler
+    AnimalFileHandler ..> LoadResult : returns
+    ZooService --> AnimalRepository : uses
+    ZooService --> AnimalFileHandler : uses
+    ZooService ..> LoadResult : returns
+    AnimalPrompter --> ConsoleIO : uses
+    AnimalPrompter --> ZooService : uses
+    ZooApplication ..> ConsoleIO : creates
+    ZooApplication ..> AnimalPrompter : creates
+    ZooApplication ..> ZooService : creates
+    ZooApplication ..> InMemoryAnimalRepository : creates
+    ZooApplication ..> CsvAnimalFileHandler : creates
+    ValidationException --|> RuntimeException
