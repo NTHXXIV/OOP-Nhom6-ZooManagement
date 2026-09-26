@@ -1,0 +1,12 @@
+id,type,name,gender,dob,habitatId,habitatName,habitatType,habitatCapacity,healthStatus,foodType,timesPerDay,feedingTimes,extraField
+A1,MAMMAL,Leo,MALE,2020-01-01,H1,Khu Savanna,Savanna,10,HEALTHY,Thịt,2,08:00;16:00,180.5
+A2,MAMMAL,Nala,FEMALE,2019-06-15,H1,Khu Savanna,Savanna,10,HEALTHY,Thịt,2,08:00;16:00,175.0
+A3,BIRD,Kiwi,FEMALE,2021-03-10,H2,Khu Chim,Aviary,20,HEALTHY,Hạt và côn trùng,3,07:00;12:00;18:00,25.0
+A4,BIRD,Rio,MALE,2018-11-20,H2,Khu Chim,Aviary,20,SICK,Trái cây,2,08:00;17:00,45.5
+A5,REPTILE,Rex,MALE,2015-07-04,H3,Khu Bò Sát,Terrarium,8,HEALTHY,Chuột,1,10:00,true
+A6,REPTILE,Sisi,FEMALE,2017-02-28,H3,Khu Bò Sát,Terrarium,8,QUARANTINE,Côn trùng,1,09:00,false
+A7,MAMMAL,Bruno,MALE,2016-09-09,H4,Khu Gấu,Forest,6,UNDER_TREATMENT,Cá và mật ong,2,07:30;15:30,220.0
+A8,BIRD,Sunny,MALE,2022-01-17,H2,Khu Chim,Aviary,20,HEALTHY,Hạt,2,08:00;16:00,30.2
+A9,REPTILE,Vipy,FEMALE,2020-05-05,H3,Khu Bò Sát,Terrarium,8,INJURED,Chuột,1,11:00,true
+A10,MAMMAL,Coco,FEMALE,2021-12-25,H4,Khu Gấu,Forest,6,HEALTHY,Trái cây và mật ong,2,08:00;17:00,150.0
+A30,MAMMAL,Hello,MALE,2025-11-13,03,KV03,Savana,50,HEALTHY,Cam,1,12:00,2.0
